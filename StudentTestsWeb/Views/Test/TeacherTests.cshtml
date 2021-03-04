@@ -1,0 +1,113 @@
+﻿@model IEnumerable<StudentTestsWeb.Models.Entities.Test>
+@{
+    ViewBag.Title = "Тесты преподавателя";
+}
+
+<div class="d-flex justify-content-between">
+    <div>
+        <h2>Ваши тесты</h2>
+    </div>
+    <div>
+        <div class="input-group input-group-sm mb-3">
+            <br />
+            <input type="text" class="form-control" id="searchInput" placeholder="Поиск..." aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary fas fa-search" type="button" id="searchBtn"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-between">
+    <div>
+        <a asp-action="EditTest" asp-controller="Test" asp-route-id="0">Добавить тест</a>
+    </div>
+    <div class="col-sm-5">
+        <div class="text-right">
+            <a data-toggle="collapse" href="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+                Параметры поиска, фильтрации
+            </a>
+        </div>
+        <div class="offset-1">
+            <div class="collapse bordered" id="collapseFilters">
+                <div>
+                    <label>Поиск по:</label>  <br />
+                    <input type="radio" name="searchType" id="searchRadio1"/>
+                    <label for="searchRadio1">дисциплине</label>    <br />
+
+                    <input type="radio" name="searchType" id="searchRadio2"/>
+                    <label for="searchRadio2">теме</label><br />
+
+                    <input type="radio" name="searchType" id="searchRadio3" checked/>
+                    <label for="searchRadio3">дисциплине и теме</label><br /><br />
+
+                    <input type="checkbox" id="onlyResultCheck" />
+                    <label for="onlyResultCheck">Скрыть тесты, которые еще никто не проходил</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<span class="text-muted" id="noSearchResults" hidden>Поиск не дал результатов</span>
+@{ if (Model.Count() == 0) {
+        <span class="text-muted">У вас пока нет созданых тестов</span>
+    }
+    else {
+        <span id="tablePlace" hidden></span>
+            <table class="table table-hover table-sorter" id="testsTable">
+                <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col"><span>Дисциплина&emsp;</span></th>
+                        <th scope="col"><span>Тема&emsp;</span></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int i = 1;
+                        foreach (var test in Model) {
+                            <tr class="test-el" id="@test.TestId">
+                                <th scope="row">@i</th>
+                                @{i++;}
+                                <td>@test.Abbr</td>
+                                <td>@test.Topic</td>
+                                <td>
+                                    <a class="test-row-edit" asp-controller="Test" asp-action="EditTest" asp-route-id="@test.TestId">
+                                        <span class="fas fa-edit" data-toggle="tooltip" title="Редактировать"></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a class="test-row-delete" href="#" data-toggle="modal" data-target="#confirmModal">
+                                        <span class="fas fa-trash" data-toggle="tooltip" title="Удалить"></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+    }
+}
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Подтверждение</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <p>Данные нельзя будет восстановить! Вы дествительно хотите выполнить удаление?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <form method="post" asp-action="DeleteTest" asp-controller="Test">
+                    <input name="id" id="testToDelete" type="number" hidden />
+                    <button type="submit" class="btn btn-primary">Подтвердить</button>
+                </form>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->

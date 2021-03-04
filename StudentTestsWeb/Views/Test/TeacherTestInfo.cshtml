@@ -1,0 +1,133 @@
+﻿@model StudentTestsWeb.Models.Entities.Test
+@{
+    ViewData["Title"] = "Информация о тесте";
+}
+
+<div class="to-print">
+    <h4>Тестирование: @Model.Abbr "@Model.Topic"</h4>
+    <br />
+    <ol>
+        @foreach (var quest in Model.Questions) {
+            <li>
+                <b>@quest.Content</b>
+                <ol type="a">
+                    @foreach (var answ in quest.Answers) {
+                        <li>@answ.Content</li>
+                    }
+                </ol>
+            </li>
+
+        }
+    </ol>
+</div>
+<div class="no-print">
+    <h1>Информация о тестировании</h1>
+    <br />
+    <div>
+        <div class="position-absolute tool-panel">
+            <a href="#" id="results"><span class="fas fa-graduation-cap"></span> Результаты</a><br /><br />
+            @if (User.IsInRole("teacher")) {
+                <a href="#" id="edit"><span class="fas fa-edit"></span> Редактировать</a><br />
+            }
+            <a href="#" id="delete" data-toggle="modal" data-target="#confirmModal"><span class="fas fa-trash"></span> &nbsp;Удалить</a><br />
+            <a href="#" id="print"><span class="fas fa-print"></span> Распечатать</a><br />
+        </div>
+        <input type="number" value="@Model.TestId" id="testId" hidden />
+        <div class="validation" asp-validation-summary="ModelOnly" />
+        <div class="form-group row no-margin">
+            <label class="col-sm-2 col-form-label">Дисциплина</label>
+            <div class="col-sm-4">
+                <label class="col-form-label"><b>@Model.Abbr</b></label>
+            </div>
+        </div>
+        <div class="form-group row no-margin">
+            <label class="col-sm-2 col-form-label">Тема</label>
+            <div class="col-sm-4">
+                <label class="col-form-label"><b>@Model.Topic</b></label>
+            </div>
+        </div>
+        <div class="form-group row no-margin">
+            <label class="col-sm-2 col-form-label">Макс. балл</label>
+            <div class="col-sm-4">
+                <label class="col-form-label" ><b id="maxScore">@Model.MaxScore</b></label>
+            </div>
+        </div>
+        <div class="form-group row no-margin">
+            <label class="col-sm-2 col-form-label">Макс. оценка</label>
+            <div class="col-sm-4">
+                <label class="col-form-label"><b id="maxMark">@Model.MaxMark</b></label>
+            </div>
+        </div>
+        <div class="form-group row no-margin">
+            <label class="col-sm-2 col-form-label">Время</label>
+            <div class="col-sm-2">
+                <label class="col-form-label"><b>@Model.Time</b></label>
+            </div>
+        </div>
+        <br />
+        <br />
+        <table class="table question-table">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Вопрос</th>
+                    <th scope="col">Варианты ответа</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1; }
+                @foreach (var quest in Model.Questions) {
+                    <tr class="quest-el">
+                        <th scope="row">@i</th>
+                        <td>
+                            <textarea class="form-control quest-el-content" placeholder="Содержание вопроса..." readonly>@quest.Content</textarea>
+                            <div class="d-flex justify-content-between">
+                                <div></div>
+                                <div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @{ int j = 0; }
+                            @foreach (var answ in quest.Answers) {
+                                <div class="quest-el-answ">
+                                    <textarea class="form-control quest-el-answ-content" placeholder="Вариант ответа..." readonly>@answ.Content</textarea>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <input type="radio" class="quest-el-check" checked="@answ.IsTrue" disabled />
+                                            <label class="col-form-label">Правильный</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                j++;
+                            }
+                        </td>
+                    </tr>
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="confirmModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Подтверждение</h4>
+                    <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </a>
+                </div>
+                <div class="modal-body">
+                    <p>Данные нельзя будет восстановить! Вы дествительно хотите выполнить удаление?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        <form method="post" asp-action="DeleteTest" asp-controller="Test">
+                            <input name="id" id="testToDelete" type="number" value="@Model.TestId" hidden />
+                            <button type="submit" class="btn btn-primary">Подтвердить</button>
+                        </form>
+                </div>
+            </div> <!-- /.модальное окно-Содержание -->
+        </div> <!-- /.модальное окно-диалог -->
+    </div> <!-- /.модальное окно -->
+</div>

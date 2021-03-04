@@ -1,0 +1,40 @@
+﻿@model StudentTestsWeb.Models.Entities.Test
+@{
+    ViewData["Title"] = "Тестирование";
+}
+
+<h2>Тестирование</h2>
+<br />
+<div class="d-flex justify-content-between">
+    <div>
+        <h3>@Model.Abbr "@Model.Topic"</h3>
+    </div>
+    <div>
+    </div>
+</div>
+<br />
+<input type="text" asp-for="TestId" value="@Model.TestId" hidden />
+<div class="question-block border position-relative">
+    <div class="centered w-75 question-content">
+        <div class="m-auto-0">
+            @{ var r = Model.Results.First(e => true); }
+            <br /><br /><br />
+            @if (r.Time == Model.Time * 60) {
+                <h5 class="text-center text-danger">Время вышло!</h5>
+                <br />
+            }
+            <h4 class="text-center">Ваш результат:</h4><br />
+            <h5 class="text-center">Баллы: @r.Score</h5>
+            <h5 class="text-center">Оценка: @((int)(r.Score * Model.MaxMark / Model.MaxScore))</h5>
+            <h5 class="text-center">Время: @($"{(int)(r.Time / 60):D2}:{(int)(r.Time % 60):D2}")</h5>
+            <br /><br />
+            <div class="d-flex justify-content-between">
+                <div></div>
+                <button class="btn btn-primary hover-no-decoration" id="exit">Выйти</button>
+                <div></div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,102 @@
+﻿@model StudentTestsWeb.Models.LoginModels.RegisterModel
+@{
+    ViewBag.Title = "Регистрация";
+}
+
+<br />
+<br />
+<h2 class="">Регистрация</h2>
+<br />
+<br />
+
+<form method="post" id="loginForm" class="text-left centered" asp-action="Register" asp-controller="Account" asp-anti-forgery="true" onload="showRegBtn()">
+    <div class="validation" asp-validation-summary="ModelOnly" />
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="AdminPassword">Код администратора</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Введите код аминистратора..." type="password" asp-for="AdminPassword" />
+            <small class="form-text text-muted text-left">Чтобы зарегистрироваться, вы должны указать специальный код. Если вы не знаете кода, обратитесь к администратору</small>
+            <span asp-validation-for="AdminPassword" />
+        </div>
+    </div>
+    <hr />
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Teacher.FirstName">Имя</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Ваше имя..." type="text" asp-for="Teacher.FirstName" />
+            <span asp-validation-for="Teacher.FirstName" />
+        </div>
+        <label class="col-sm-2 col-form-label" asp-for="Teacher.Mail">Почта</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Ваш адрес эл. почты..." type="email" asp-for="Teacher.Mail" />
+            <span asp-validation-for="Teacher.Mail" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Teacher.LastName">Фамилия</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Ваша фамилия..." type="text" asp-for="Teacher.LastName" />
+            <span asp-validation-for="Teacher.LastName" />
+        </div>
+        <label class="col-sm-2 col-form-label" asp-for="Password">Пароль</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Придумайте пароль..." type="password" asp-for="Password" />
+            <span asp-validation-for="Password" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Teacher.FatherName">Отчество</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Ваше отчество..." type="text" asp-for="Teacher.FatherName" />
+            <span asp-validation-for="Teacher.FatherName" />
+        </div>
+        <label class="col-sm-2 col-form-label" asp-for="ConfirmPassword">Подтверждение</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Подтвердите пароль..." type="password" asp-for="ConfirmPassword" />
+            <span asp-validation-for="ConfirmPassword" />
+        </div>
+    </div>
+    <hr />
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Teacher.Department">Кафедра</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Ваша кафедра..." type="text" asp-for="Teacher.Department" />
+            <span asp-validation-for="Teacher.Department" />
+        </div>
+        <label class="col-sm-2 col-form-label" asp-for="Teacher.Position">Должность</label>
+        <div class="col-sm-4">
+            <input class="form-control" placeholder="Ваша должность..." type="text" asp-for="Teacher.Position" />
+            <span asp-validation-for="Teacher.Position" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" name="Teacher.Disciplines[0].Abbr">Дисциплины</label>
+        <div class="col-sm-4 disc-el">
+            <input class="form-control disc-abbr" type="text" name="Teacher.Disciplines[0].Abbr" placeholder="Введите аббревиатуру..." list="discList" />
+        </div>
+    </div>
+    <div class="form-group row" id="discInputPattern" hidden>
+        <div class="col-sm-4 disc-el offset-2">
+            <input class="form-control disc-abbr" type="text" name="Teacher.Disciplines[<i>].Abbr" placeholder="Введите аббревиатуру..." list="discList" />
+        </div>
+        <a href="#" title="Удалить" class="align-self-center btn-remove-disc"><span class="fas fa-trash " data-toggle="tooltip"></span></a>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4 offset-2">
+            <span asp-validation-for="Teacher.Disciplines" />
+            <button class="btn btn-dark btn-add-disc">Добавить</button>
+            <small class="form-text text-muted text-left">Для добавления дисциплины нажмите на кнопку <b>Добавить</b>, затем выберете дисциплину из уже существующих, или впишите новую</small>
+        </div>
+    </div>
+    <div class="form-group row text-left">
+        <a class="offset-9" asp-controller="Account" asp-action="Login">Войти в имеющуюся учетную запись</a><br />
+    </div>
+    <div class="form-group row text-right">
+        <input type="submit" value="Зарегистрироваться" class="btn btn-success offset-10" />
+    </div>
+    <datalist id="discList">
+        @foreach (var d in Model.Disciplines) {
+            <option>@d.Abbr</option>
+        }
+    </datalist>
+</form>

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<StudentTestsWeb.Models.Entities.Student>
+@{
+    ViewBag.Title = "Все смартфоны";
+}
+<a asp-action="Create">Добавить студента</a>
+<table class="table">
+    <tr>
+        <td>Имя</td>
+        <td>Фамилия</td>
+        <td>Пароль</td>
+    </tr>
+    @foreach (var student in Model) {
+        <tr>
+            <td>@student.FirstName</td>
+            <td>@student.LastName</td>
+            <td>@student.Password</td>
+        </tr>
+    }
+</table>

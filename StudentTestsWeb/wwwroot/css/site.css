@@ -1,0 +1,213 @@
+/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+a.navbar-brand {
+  white-space: normal;
+  text-align: center;
+  word-break: break-all;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.border-top {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+.no-bot-margin {
+    margin-bottom: 0;
+}
+
+.no-top-margin {
+    margin-top: 0;
+}
+
+.non-link {
+    text-decoration: none;
+    color: black;
+}
+
+    .non-link:hover {
+        text-decoration: none;
+    }
+
+.centered {
+    margin: 0 auto;
+}
+
+.middled {
+    margin: auto 0;
+}
+
+.left-from-center {
+    margin-left: 15%;
+    margin-right: 35%;
+}
+
+#loginForm {
+    max-width: 1070px;
+}
+
+    #loginForm div .form-check {
+        padding-left: 2.5rem;
+    }
+
+.test-el:hover, 
+.student-el:hover,
+.teacher-el:hover {
+    cursor: pointer;
+}
+
+.hv-underline:hover {
+    text-decoration: underline;
+}
+
+.no-margin {
+    margin: 0 0;
+}
+
+.nav-buttons-row {
+    border: none;
+}
+
+.custom-search {
+    position: absolute;
+    top: 32px;
+    right: 20px;
+}
+
+.sorted-header {
+    cursor: pointer;
+}
+
+th:focus {
+    outline: none;
+}
+
+th.tablesorter-headerAsc span:after {
+    position: absolute;
+    content: '▼';
+}
+
+th.tablesorter-headerDesc span:after {
+    position: absolute;
+    content: '▲';
+}
+
+.tool-panel {
+    width: 150px;
+    right: 400px;
+    line-height: 30px;
+}
+
+.tool-panel a:hover {
+    text-decoration: none;
+}
+
+.to-print {
+    display: none;
+}
+
+.no-print {
+    display: block;
+}
+
+.no-hidden {
+    display: block;
+}
+
+.question-block {
+    padding: 100px;
+    padding-top: 30px;
+    height: 550px;
+}
+
+.form-login {
+    max-width: 600px !important;
+}
+
+.custom-justify div {
+    min-width: 30%;
+}
+
+.m-top-100 {
+    margin-top: 50px;
+}
+
+.hover-no-decoration:hover {
+    text-decoration: none;
+}
+
+#timer {
+    width: 60px;
+}
+
+.top-padding {
+    padding-top: 20px;
+}
+
+.question-content {
+    height: 450px;
+}
+
+.m-auto-0 {
+    height: 200px;
+    margin: auto 0;
+}
+
+.help-text {
+    top: 10px;
+    left: 20px;
+    font-size: 14px;
+}
+
+@media print {
+    .to-print {
+        display: block;
+    }
+
+    .no-print {
+        display: none;
+    }
+}

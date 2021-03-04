@@ -1,0 +1,245 @@
+﻿@model StudentTestsWeb.Models.MainModels.ResultsModel
+@{
+    ViewData["Title"] = "Результаты теста";
+}
+
+<div class="to-print">
+    <h4>Результаты тестирования: @Model.Test.Abbr "@Model.Test.Topic"</h4>
+    <br />
+</div>
+<div class="no-print">
+    <h1>Результаты тестирования: @Model.Test.Abbr "@Model.Test.Topic"</h1>
+    <br />
+</div>
+@if (Model.Results == null || Model.Results.Count() == 0) {
+    <span class="text-muted">Этот тест еще никто не прошел</span>
+}
+else {
+    <div class="no-print">
+        <h3 class="to-remove">Статистика</h3>
+        <div>
+            <div class="to-remove">
+                <input type="number" value="@Model.Test.TestId" id="testId" hidden />
+                <div class="validation" asp-validation-summary="ModelOnly" />
+                <div class="form-group row no-margin">
+                    <label class="col-sm-3 col-form-label">Всего прошли тест</label>
+                    <div class="col-sm-4">
+                        @*Кількість студентів, які приймали участь у тестуванні*@
+                        <label class="col-form-label"><b>@Model.Results.Count()</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-3 col-form-label">Не преодолели порог</label>
+                    <div class="col-sm-4">
+                        @*Кількість студентів, які не здали тестування*@
+                        <label class="col-form-label"><b>@Model.Results.Where(r => r.Score < Model.Test.MaxScore / 2)?.Count()</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-3 col-form-label">Написали отлично</label>
+                    <div class="col-sm-4">
+@*Кількість студентів, що здали на відмінно*@
+<label class="col-form-label"><b>@Model.Results.Where(r => r.Score >= Model.Test.MaxScore * 0.9)?.Count()</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-3 col-form-label">
+                        <a href="#" data-toggle="modal" data-target="#statModal">
+                            Сложность вопросов
+                        </a>
+                    </label>
+                    <div class="col-sm-4">
+
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-3 col-form-label">
+                        <a href="#" data-toggle="modal" data-target="#statModal1">
+                            Зависимость успешности от времени прохождения
+                        </a>
+                    </label>
+                    <div class="col-sm-4">
+
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div>
+
+                    </div>
+                    <div>
+                        <div class="input-group input-group-sm mb-3">
+                            <br />
+                            <input type="text" class="form-control" id="searchInput" placeholder="Поиск..." aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary fas fa-search" type="button" id="searchBtn"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <button class="btn btn-link" id="print"><span class="fas fa-print"></span> Распечатать</button>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="text-right">
+                            <a data-toggle="collapse" href="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+                                Параметры поиска, фильтрация
+                            </a>
+                        </div>
+                        <div class="offset-1">
+                            <div class="collapse bordered" id="collapseFilters">
+                                <div>
+                                    <label>Поиск по:</label>  <br />
+                                    <input type="radio" name="searchType" id="searchRadio1" checked />
+                                    <label for="searchRadio1">студенту</label>    <br />
+                                    <input type="radio" name="searchType" id="searchRadio2" />
+                                    <label for="searchRadio2">группе</label><br /><br />
+
+                                    <label>Баллы</label><br />
+                                    <div class="form-group row">
+                                        <label for="scoreStart" class="col-sm-2">От:</label>
+                                        <input type="number" class="form-control form-control-sm col-sm-2" id="scoreStart" value="0" />
+                                        <label for="scoreEnd" class="col-sm-2">До:</label><br />
+                                        <input type="number" class="form-control form-control-sm col-sm-2" id="scoreEnd" value="@Model.Test.MaxScore" />
+                                    </div>
+
+
+                                    <label>Оценка</label><br />
+                                    <div class="form-group row">
+                                        <label for="markStart" class="col-sm-2">От:</label>
+                                        <input type="number" class="form-control form-control-sm col-sm-2" id="markStart" value="0" />
+                                        <label for="markEnd" class="col-sm-2">До:</label><br />
+                                        <input type="number" class="form-control form-control-sm col-sm-2" id="markEnd" value="@Model.Test.MaxMark" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <span class="text-muted" id="noSearchResults" hidden>Поиск не дал результатов</span>
+        </div>
+    </div>
+    <div class="to-print no-hidden">
+        <span id="tablePlace" hidden></span>
+        <table class="table table-sorter result-table">
+            <thead>
+                <tr>
+                    <th scope="col"><span>Cтудент&emsp;</span></th>
+                    <th scope="col"><span>Группа&emsp;</span></th>
+                    <th scope="col"><span>Баллы&emsp;</span></th>
+                    <th scope="col"><span>Оценка&emsp;</span></th>
+                    <th scope="col"><span>Время&emsp;</span></th>
+                    @if (User.IsInRole("admin")) {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var res in Model.Results) {
+                <tr class="res-el" id="@(res.TestId)_@res.StudentId">
+                    @{ var student = @Model.Students.First(s => s.StudentId == res.StudentId);}
+                    <td><a class="btn-link text-dark" asp-controller="Student" asp-action="StudentInfo" asp-route-id="@(student.StudentId)">@student.LastName @student.FirstName</a></td>
+                    <td>@student.Group</td>
+                    <td>@res.Score</td>
+                    <td>@((int)(res.Score * Model.Test.MaxMark / Model.Test.MaxScore))</td>
+                    <td>@((res.Time / 60).ToString("00")):@((res.Time % 60).ToString("00"))</td>
+                    @if (User.IsInRole("admin")) {
+                        <td>
+                            <a class="res-row-delete" href="#" data-toggle="modal" data-target="#confirmModal">
+                                <span class="fas fa-trash" data-toggle="tooltip" title="Удалить"></span>
+                            </a>
+                        </td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Подтверждение</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <p>Данные нельзя будет восстановить! Вы дествительно хотите выполнить удаление?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <form method="post" asp-action="DeleteResult" asp-controller="Result">
+                    <input name="studentId" id="resToDeleteSID" type="number" hidden />
+                    <input name="testId" id="resToDeleteTID" type="number" hidden />
+                    <button type="submit" class="btn btn-primary">Подтвердить</button>
+                </form>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->
+
+<div class="modal fade" id="statModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Сложность вопросов</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <canvas id="myChart" width="400" height="400"></canvas>
+                <script>
+
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->
+<span id="maxScore" hidden>@Model.Test.MaxScore</span>
+<br />
+@*Дані для побудови графіку*@
+<span id="data">
+    @foreach(var r in Model.Test.Questions) {
+        @((1 - Math.Round((double)r.TrueAnswers / (double)r.TotalAnswers, 1)) + ".")
+    }
+</span>
+<div class="modal fade" id="statModal1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Результативность по времени</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <canvas id="myChart1" width="400" height="400"></canvas>
+                <script>
+
+                </script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->
+<br />
+<span id="datay" hidden>
+    @foreach(var s in Model.Results) {
+        @(s.Score + ",")
+    }
+</span>
+<span id="datax" hidden>
+    @foreach (var s in Model.Results) {
+        @(s.Time + ",")
+    }
+</span>

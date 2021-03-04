@@ -1,0 +1,78 @@
+﻿@model IEnumerable<StudentTestsWeb.Models.Entities.Test>
+@{
+    ViewBag.Title = "Тесты студента";
+}
+
+<div class="d-flex justify-content-between">
+    <div>
+        <h2>Доступные вам тесты</h2>
+    </div>
+    <div>
+        <div class="input-group input-group-sm mb-3">
+            <br />
+            <input type="text" class="form-control" id="searchInput" placeholder="Поиск..." aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary fas fa-search" type="button" id="searchBtn"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-between">
+    <div>
+    </div>
+    <div class="col-sm-5">
+        <div class="text-right">
+            <a data-toggle="collapse" href="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+                Параметры поиска, фильтрации
+            </a>
+        </div>
+        <div class="offset-1">
+            <div class="collapse bordered" id="collapseFilters">
+                <div>
+                    <label>Поиск по:</label>  <br />
+                    <input type="radio" name="searchType" id="searchRadio1" />
+                    <label for="searchRadio1">дисциплине</label>    <br />
+
+                    <input type="radio" name="searchType" id="searchRadio2" />
+                    <label for="searchRadio2">теме</label><br />
+
+                    <input type="radio" name="searchType" id="searchRadio3" checked />
+                    <label for="searchRadio3">дисциплине и теме</label><br /><br />
+
+                    <input type="checkbox" id="onlyResultCheck" />
+                    <label for="onlyResultCheck">Скрыть тесты, которые вы уже прошли</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<span class="text-muted" id="noSearchResults" hidden>Поиск не дал результатов</span>
+@{ if (Model.Count() == 0) {
+        <span class="text-muted">У вас пока нет доступных для прохождения тестов</span>
+    }
+    else {
+        <span id="tablePlace" hidden></span>
+        <table class="table table-hover table-sorter" id="testsTable">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col"><span>Дисциплина&emsp;</span></th>
+                    <th scope="col"><span>Тема&emsp;</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;
+                    foreach (var test in Model) {
+                        <tr class="test-el" id="@test.TestId">
+                            <th scope="row">@i</th>
+                            @{i++;}
+                            <td>@test.Abbr</td>
+                            <td>@test.Topic</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+}

@@ -1,0 +1,79 @@
+﻿@model StudentTestsWeb.Models.Entities.Student
+@{
+    bool isNew = Model.StudentId == 0 ? true : false;
+    ViewData["Title"] = "Edit";
+}
+
+@if (isNew) {
+    <h1>Добавить студента</h1>
+}
+else {
+    <h1>Редактировать учетную запись студента</h1>
+}
+<br />
+
+<form method="post" class="centered" asp-action="Edit" asp-controller="Student" asp-anti-forgery="true">
+    <input type="number" value="@Model.StudentId" asp-for="StudentId" hidden />
+    <div class="validation" asp-validation-summary="ModelOnly" />
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="LastName">Фамилия</label>
+        <div class="col-sm-3">
+            @if (isNew) {
+                <input class="form-control" placeholder="Фамилия..." type="text" asp-for="LastName" />
+            }
+            else {
+                <input class="form-control" placeholder="Фамилия..." type="text" asp-for="LastName" value="@Model.LastName" />
+            }
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="FirstName">Имя</label>
+        <div class="col-sm-3">
+            @if (isNew) {
+                <input class="form-control" placeholder="Имя..." type="text" asp-for="FirstName" />
+            }
+            else {
+                <input class="form-control" placeholder="Имя..." type="text" asp-for="FirstName" value="@Model.FirstName" />
+            }
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="FatherName">Отчество</label>
+        <div class="col-sm-3">
+            @if (isNew) {
+                <input class="form-control" placeholder="Отчество..." type="text" asp-for="FatherName" />
+            }
+            else {
+                <input class="form-control" placeholder="Отчество..." type="text" asp-for="FatherName" value="@Model.FatherName" />
+            }
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Mail">Почта</label>
+        <div class="col-sm-3">
+            @if (isNew) {
+                <input class="form-control" placeholder="Почта..." type="text" asp-for="Mail" />
+            }
+            else {
+                <input class="form-control" placeholder="Почта..." type="text" asp-for="Mail" value="@Model.Mail" />
+            }
+            <small class="text-muted">На эту почту студенту будет выслан сгенерированный пароль</small>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Group">Группа</label>
+        <div class="col-sm-2">
+            @if (isNew) {
+                <input class="form-control" placeholder="Группа..." type="text" asp-for="Group" />
+            }
+            else {
+                <input class="form-control" placeholder="Группа..." type="text" asp-for="Group" value="@Model.Group" />
+            }
+        </div>
+    </div>
+    <br />
+    <div class="form-group row">
+        <button type="submit" class="btn btn-primary">Подтвердить</button>
+    </div>
+</form>
+

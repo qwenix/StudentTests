@@ -1,0 +1,69 @@
+﻿@model StudentTestsWeb.Models.Entities.Test
+@{
+    ViewData["Title"] = "Тестирование";
+}
+<form id="playTest" method="post" asp-action="PlayTest" asp-controller="Test">
+
+    <h2>Тестирование</h2><br />
+    <div class="d-flex justify-content-between">
+        <div>
+            <h3>@Model.Abbr "@Model.Topic"</h3>
+        </div>
+        <div>
+            <h4 class="d-inline">Время: </h4>
+            <h4 id="timer" class="d-inline-block">@($"{Model.Time:D2}:00")</h4>
+            <input type="number" name="time" id="time" hidden />
+        </div>
+    </div>
+    <br />
+    <input type="text" asp-for="TestId" value="@Model.TestId" hidden />
+    @{ int idx = 0; }
+    @foreach (var q in Model.Questions) {
+        <div class="question-block border position-relative" id="q@(idx + 1)" hidden>
+            <span class="text-muted position-absolute help-text">Обновление страницы приведет к завершению теста, будьте внимательны</span>
+            <div class="centered w-75 question-content">
+                <div class="m-auto-0">
+                    <br />
+                    <br />
+                    <input type="text" name="Questions[@idx].Content" value="@q.Content" hidden />
+                    <h4 class="text-center">Вопрос @(idx + 1) из @(Model.Questions.Count)</h4>
+                    <br />
+                    <h5 class="text-center">@q.Content</h5><br />
+                    <input type="text" id="trueAnswer_@(idx)" value="true" hidden />
+
+                    @{ int j = 0; }
+                    @foreach (var a in q.Answers) {
+                        <input type="radio" class="form-check-input" id="@(idx)a@(j)" name="av@(idx + 1))" />
+                        <input type="text" name="Questions[@idx].Answers[@j].Content" value="@a.Content" hidden />
+                        <label class="d-inline" for="@(idx)a@(j)">@a.Content</label>
+                        j++;
+                        <br />
+                    }
+                </div>
+            </div>
+            <div class="centered w-25 d-flex justify-content-between nav-buttons-test">
+                @if (idx != 0) {
+                    <button class="btn btn-link hover-no-decoration btn-back"><span class="fas fa-arrow-left"></span> Назад</button>
+                }
+                else {
+                    <button class="btn btn-link hover-no-decoration disabled"><span class="fas fa-arrow-left"></span> Назад</button>
+                }
+                @if (idx != Model.Questions.Count - 1) {
+                    <button class="btn btn-link hover-no-decoration btn-next">Далее <span class="fas fa-arrow-right"></span></button>
+                }
+                else {
+                    <button class="btn btn-link hover-no-decoration disabled">Далее <span class="fas fa-arrow-right"></span></button>
+                }
+            </div>
+            @{ idx++; }
+        </div>
+    }
+    <br />
+    <div class="d-flex justify-content-between">
+        <div></div>
+        <button class="btn btn-outline-success" id="endTest">Завершить тестирование</button>
+    </div>
+</form>
+
+
+

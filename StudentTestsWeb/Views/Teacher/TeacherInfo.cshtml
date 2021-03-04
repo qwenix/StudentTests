@@ -1,0 +1,99 @@
+﻿@model List<StudentTestsWeb.Models.Entities.Discipline>
+@{
+    ViewData["Title"] = "TeacherInfo";
+}
+
+<h1>Информация о преподавателе</h1>
+@{
+    var teacher = Model.First(d => true).Teacher;
+    var tests = Model.First(d => true).Tests;
+    for (int i = 1; i < Model.Count(); i++) {
+        tests = tests.Concat(Model[i].Tests).ToList();
+    }
+}
+<br />
+<br />
+<div>
+    <input type="number" value="@teacher.TeacherId" id="teacherId" hidden />
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">ФИО</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@teacher.LastName @teacher.FirstName @teacher.FatherName</b></label>
+        </div>
+    </div>
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">Кафедра</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@teacher.Department</b></label>
+        </div>
+    </div>
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">Должность</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@teacher.Position</b></label>
+        </div>
+    </div>
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">Почта</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@teacher.Mail</b></label>
+        </div>
+    </div>
+    <br />
+    <div class="form-group row no-margin">
+        <a href="#" class="btn btn-link" data-toggle="modal" data-target="#confirmModal" id="removeTeacher"><span class="fas fa-trash"></span> Удалить учетную запись преподавателя</a>
+    </div>
+    <br /><br />
+    <h4>Тесты преподавателя</h4>
+    <br />
+    @if (tests.Count() == 0) {
+        <span class="text-muted">Пока не создано ни одного теста</span>
+    }
+    else {
+        <table class="table table-hover table-sorter" id="testsTable">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col"><span>Дисциплина&emsp;</span></th>
+                    <th scope="col"><span>Тема&emsp;</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;
+                    foreach (var test in tests) {
+                        <tr class="test-el" id="@test.TestId">
+                            <th scope="row">@i</th>
+                            @{i++;}
+                            <td>@test.Abbr</td>
+                            <td>@test.Topic</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Подтверждение</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <p>Данные нельзя будет восстановить! Вы дествительно хотите выполнить удаление?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <form method="post" asp-action="DeleteTeacher" asp-controller="Teacher">
+                    <input name="id" id="testToDelete" type="number" value="@teacher.TeacherId" hidden />
+                    <button type="submit" class="btn btn-primary">Подтвердить</button>
+                </form>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->
+</div>
+

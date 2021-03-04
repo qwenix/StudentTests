@@ -1,0 +1,211 @@
+﻿@model StudentTestsWeb.Models.MainModels.TestEditModel
+@{
+    bool isNew = Model.Test.TestId == 0;
+    if (isNew) {
+        ViewData["Title"] = "Добавить тест";
+    }
+    else {
+        ViewData["Title"] = "Редактировать тест";
+    }
+}
+@if (isNew) {
+    <h1>Создать тест</h1>
+}
+else {
+    <h1>Редактировать тест</h1>
+}
+<br />
+
+<form method="post" class="centered" asp-action="EditTest" asp-controller="Test" asp-anti-forgery="true">
+    <input type="number" value="@Model.Test.TestId" asp-for="Test.TestId" hidden/>
+    <div class="validation" asp-validation-summary="ModelOnly" />
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Test.Abbr">Дисциплина</label>
+        <div class="col-sm-3">
+            @if (isNew) {
+                <input class="form-control" placeholder="Введите аббревиатуру..." type="text" asp-for="Test.Abbr" list="discList" />
+            }
+            else {
+                <input class="form-control" placeholder="Введите аббревиатуру..." type="text" asp-for="Test.Abbr" list="discList" />
+            }
+            <span asp-validation-for="Test.Abbr" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Test.Topic">Тема</label>
+        <div class="col-sm-3">
+            @if (isNew) {
+                <input class="form-control" placeholder="Тема тестирования..." type="text" asp-for="Test.Topic" />
+            }
+            else {
+                <input class="form-control" placeholder="Тема тестирования..." type="text" asp-for="Test.Topic" />
+            }
+            <span asp-validation-for="Test.Topic" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Test.MaxMark">Макс. оценка</label>
+        <div class="col-sm-2">
+            @if (isNew) {
+                <input class="form-control" placeholder="Оценка..." type="number" asp-for="Test.MaxMark" value="10" />
+            }
+            else {
+                <input class="form-control" placeholder="Оценка..." type="number" asp-for="Test.MaxMark" />
+            }
+            <span asp-validation-for="Test.MaxMark" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Test.Time">Время (мин)</label>
+        <div class="col-sm-2">
+            @if (isNew) {
+                <input class="form-control" placeholder="Время..." type="number" asp-for="Test.Time" value="10" />
+            }
+            else {
+                <input class="form-control" placeholder="Время..." type="number" asp-for="Test.Time" />
+            }
+            <span asp-validation-for="Test.Time" />
+        </div>
+    </div>
+    <br />
+    <br />
+    <table class="table question-table">
+        <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Вопрос</th>
+                <th scope="col">Варианты ответа</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (isNew) {
+                <tr class="quest-el">
+                    <th scope="row">1</th>
+                    <td>
+                        <textarea class="form-control quest-el-content" placeholder="Содержание вопроса..." name="Test.Questions[0].Content"></textarea>
+                        <input type="text" id="correct0" name="Test.Questions[0].Answers[0].IsTrue" value="true" hidden />
+                    </td>
+                    <td>
+                        <div class="quest-el-answ">
+                                <textarea class="form-control quest-el-answ-content" placeholder="Вариант ответа..." name="Test.Questions[0].Answers[0].Content"></textarea>
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <input type="radio" id="Test.Questions[0].Answers[0].IsTrue" class="quest-el-check" name="radio0" checked/>
+                                    <label class="col-form-label">Правильный</label>
+                                </div>
+                                <a href="#" class="col-form-label del-answ invisible">Удалить вариант ответа</a>
+                            </div>
+                        </div>
+                        <button class="btn btn-light btn-add-answ">Добавить вариант ответа</button>
+                    </td>
+                </tr>
+            }
+            else {
+            int i = 1;
+            @foreach (var quest in Model.Test.Questions) {
+                <tr class="quest-el">
+                    <th scope="row">@i</th>
+                    <td>
+                        <textarea class="form-control quest-el-content" placeholder="Содержание вопроса..." name="Test.Questions[@(i - 1)].Content">@quest.Content</textarea>
+                        <div class="d-flex justify-content-between">
+                            <div></div>
+                            <div>
+                                @if (i != 1) {
+                                    <a href="#" class="col-form-label del-quest">Удалить вопрос</a>
+                                }
+                            </div>
+                        </div>
+                        @{ 
+                            int trueAnswId = 0;
+                            foreach (var answ in quest.Answers) {
+                                if (!answ.IsTrue) {
+                                    trueAnswId++;
+                                }
+                            }
+                        }
+                        <input type="text"  id="correct@(i - 1)" name="Test.Questions[@(i - 1)].Answers[@trueAnswId].IsTrue" value="true" hidden />
+                    </td>
+                    <td>
+                        @{ int j = 0; }
+                        @foreach (var answ in quest.Answers) {
+                            <div class="quest-el-answ">
+                                <textarea class="form-control quest-el-answ-content" placeholder="Вариант ответа..." name="Test.Questions[@(i - 1)].Answers[@j].Content">@answ.Content</textarea>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <input type="radio" id="Test.Questions[@(i - 1)].Answers[@j].IsTrue" class="quest-el-check" name="radio@(i - 1)" checked="@answ.IsTrue"/>
+                                        <label class="col-form-label">Правильный</label>
+                                    </div>
+                                    @if (j != 0) {
+                                        <a href="#" class="col-form-label del-answ">Удалить вариант ответа</a>
+                                    }
+                                    else {
+                                        <a href="#" class="col-form-label del-answ invisible">Удалить вариант ответа</a>
+                                    }
+                                </div>
+                            </div>
+                            j++;
+                        }
+                        <button class="btn btn-light btn-add-answ">Добавить вариант ответа</button>
+                    </td>
+                </tr>
+                    i++;
+                }
+            }
+            <tr class="quest-el" id="questPattern" hidden>
+                <th scope="row">0</th>
+                <td>
+                    <textarea class="form-control quest-el-content" placeholder="Содержание вопроса..." name="Test.Questions[<i>].Content"></textarea>
+                    <input type="text"  id="correct<i>" name="Test.Questions[<i>].Answers[0].IsTrue" value="true" hidden />
+                    <div class="d-flex justify-content-between">
+                        <div></div>
+                        <div>
+                            <a href="#" class="col-form-label del-quest">Удалить вопрос</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="quest-el-answ">
+                        <textarea class="form-control quest-el-answ-content" placeholder="Вариант ответа..." name="Test.Questions[<i>].Answers[0].Content"></textarea>
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <input type="radio" id="Test.Questions[<i>].Answers[0].IsTrue" class="quest-el-check" name="radio<i>" checked />
+                                <label class="col-form-label">Правильный</label>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-light btn-add-answ">Добавить вариант ответа</button>
+                </td>
+            </tr>
+            <tr class="nav-buttons-row">
+                <th></th>
+                <td><button class="btn btn-light btn-add-quest">Добавить вопрос</button></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="form-group row">
+        @if (isNew) {
+            <button type="submit" class="btn btn-success offset-10 col-sm-2" >Добавить тест</button>
+        }
+        else {
+            <button type="submit" class="btn btn-success offset-10 col-sm-2">Сохранить изменения</button>
+        }
+    </div>
+    <div class="quest-el-answ" id="quest-el-answ-pattern" hidden>
+        <textarea class="form-control quest-el-answ-content" placeholder="Вариант ответа..." name="Test.Questions[<i>].Answers[<j>].Content"></textarea>
+        <div class="d-flex justify-content-between">
+            <div>
+                <input type="radio" id="Test.Questions[<i>].Answers[<j>].IsTrue" class="quest-el-check" name="radio<i>" value="false" />
+                <label class="col-form-label">Правильный</label>
+            </div>
+            <a href="#" class="col-form-label del-answ">Удалить вариант ответа</a>
+        </div>
+    </div>
+    <datalist id="discList">
+        @foreach (var d in Model.Teacher.Disciplines) {
+            <option>@d.Abbr</option>
+        }
+    </datalist>
+</form>
+
+

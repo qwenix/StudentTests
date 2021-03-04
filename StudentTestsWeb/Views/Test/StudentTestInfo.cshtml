@@ -1,0 +1,85 @@
+﻿@model StudentTestsWeb.Models.MainModels.StudentTestInfoModel
+@{
+    ViewData["Title"] = "Информация о тесте";
+}
+
+    <div>
+        <h1>Информация о тестировании</h1>
+        <br />
+        <div class="d-flex justify-content-between custom-justify">
+            <div>
+                <input type="number" value="@Model.Test.TestId" id="testId" hidden />
+                <div class="validation" asp-validation-summary="ModelOnly" />
+                <div class="form-group row no-margin">
+                    <label class="col-sm-5 col-form-label">Дисциплина</label>
+                    <div class="col-sm-4">
+                        <label class="col-form-label"><b>@Model.Test.Abbr</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-5 col-form-label">Тема</label>
+                    <div class="col-sm-7">
+                        <label class="col-form-label"><b>@Model.Test.Topic</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-5 col-form-label">Макс. балл</label>
+                    <div class="col-sm-4">
+                        <label class="col-form-label"><b>@Model.Test.MaxScore</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-5 col-form-label">Макс. оценка</label>
+                    <div class="col-sm-4">
+                        <label class="col-form-label"><b>@Model.Test.MaxMark</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="col-sm-5 col-form-label">Время</label>
+                    <div class="col-sm-2">
+                        <label class="col-form-label"><b>@Model.Test.Time мин.</b></label>
+                    </div>
+                </div>
+            </div>
+
+            @if (!(Model.Result == null || Model.Result.StudentId == 0)) {
+            <div class="border top-padding">
+                <h3 class="text-center">Ваши результаты</h3>
+                <div class="form-group row no-margin">
+                    <label class="offset-3 col-sm-4 col-form-label">Баллы</label>
+                    <div class="col-sm-2">
+                        <label class="col-form-label"><b>@Model.Result.Score</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="offset-3 col-sm-4 col-form-label">Оценка</label>
+                    <div class="col-sm-2">
+                        <label class="col-form-label"><b>@((int)(Model.Result.Score * Model.Test.MaxMark / Model.Test.MaxScore))</b></label>
+                    </div>
+                </div>
+                <div class="form-group row no-margin">
+                    <label class="offset-3 col-sm-4 col-form-label">Время</label>
+                    <div class="col-sm-2">
+                        @{ 
+                            int min = (int)Math.Floor((double)Model.Result.Time / 60);
+                            int sec = Model.Result.Time % 60;
+                        }
+                        <label class="col-form-label"><b>@($"{min:D2}:{sec:D2}")</b></label>
+                    </div>
+                </div>
+            </div>
+            }
+            else {
+                <div></div>
+            }
+        </div>
+
+        <br />
+        <br />
+        @if (!(Model.Result == null || Model.Result.StudentId == 0)) {
+
+        }
+        else {
+            <button class="btn btn-primary" id="startTestBtn">Начать тест</button>
+        }
+    </div>

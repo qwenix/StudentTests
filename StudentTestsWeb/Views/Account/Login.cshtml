@@ -1,0 +1,44 @@
+﻿@model StudentTestsWeb.Models.LoginModels.LoginModel
+@{ 
+    ViewBag.Title = "Вход в систему";
+}
+
+<br />
+<br />
+<br />
+<h2 class="text-center">Вход в систему</h2>
+<br />
+<br />
+
+<form method="post" id="loginForm" class="centered form-login" asp-action="Login" asp-controller="Account" asp-anti-forgery="true">
+    <div class="validation" asp-validation-summary="ModelOnly" />
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label">Войти как</label>
+        <div class="col-sm-8 form-check">
+            <input class="form-check-input" type="radio" name="role" id="studentRadio" checked value="1"/>
+            <label class="form-check-label" for="studentRadio">студент</label><br />
+            <input class="form-check-input" type="radio" name="role" id="teacherRadio" value="2"/>
+            <label class="form-check-label" for="teacherRadio">преподаватель</label><br />
+            <input class="form-check-input" type="radio" name="role" id="adminRadio" value="3"/>
+            <label class="form-check-label" for="adminRadio">администратор</label>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label" asp-for="Email">Почта</label>
+        <div class="col-sm-8">
+            <input class="form-control" placeholder="Ваш адрес эл. почты..." type="text" asp-for="Email"/>
+            <span asp-validation-for="Email" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-sm-4 col-form-label" asp-for="Password">Введите пароль</label>
+        <div class="col-sm-8">
+            <input class="form-control" placeholder="Ваш пароль..." asp-for="Password" />
+            <span asp-validation-for="Password" />
+        </div>
+    </div>
+    <div class="form-group text-right">
+        <input type="button"  value="Зарегистрироваться" class="btn btn-success" id="regBtn" disabled>
+        <input type="submit" value="Войти" class="btn btn-primary" />
+    </div>
+</form>

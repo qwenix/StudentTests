@@ -1,0 +1,94 @@
+﻿@model IEnumerable<StudentTestsWeb.Models.Entities.Student>
+@{
+    ViewData["Title"] = "Студенты";
+}
+
+<div class="d-flex justify-content-between">
+    <div>
+        <h2>Список студентов</h2>
+    </div>
+    <div>
+        <div class="input-group input-group-sm mb-3">
+            <br />
+            <input type="text" class="form-control" id="searchInput" placeholder="Поиск..." aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary fas fa-search" type="button" id="searchBtn"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-between">
+    <div>
+        @if (User.IsInRole("admin")) {
+            <a class="btn-link" asp-controller="Student" asp-action="Edit">Добавить учетную запись студента</a>
+        }
+    </div>
+    <div class="col-sm-5">
+        <div class="text-right">
+            <a data-toggle="collapse" href="#collapseFilters" aria-expanded="false" aria-controls="collapseExample">
+                Параметры поиска, фильтрации
+            </a>
+        </div>
+        <div class="offset-4">
+            <div class="collapse bordered" id="collapseFilters">
+                <div>
+                    <label>Поиск по:</label>  <br />
+                    <input type="radio" name="searchType" id="searchRadio1" checked />
+                    <label for="searchRadio1">ФИО</label>    <br />
+
+                    <input type="radio" name="searchType" id="searchRadio2" />
+                    <label for="searchRadio2">группе</label><br /><br />
+
+                    <input type="checkbox" class="d-inline-block" id="onlyFive" />
+                    <label for="onlyFive" class="d-inline">Отличники</label><br />
+                    <input type="checkbox" class="d-inline-block" id="onlyTwo" />
+                    <label for="onlyTwo" class="d-inline">Должники</label><br /><br />
+
+                    <input type="checkbox" class="d-inline-block" id="onlyResultCheck" />
+                    <label for="onlyResultCheck" class="d-inline">Только те, кто проходил тестирования</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+@{ if (Model.Count() == 0) {
+        <span class="text-muted">В базе нет ни одного студента</span>
+    }
+    else {
+        <span class="text-muted" id="noSearchResults" hidden>Поиск не дал результатов</span>
+        <span id="tablePlace" hidden></span>
+        <table class="table table-hover" id="studentsTable">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col"><span>ФИО&emsp;</span></th>
+                    <th scope="col"><span>Группа&emsp;</span></th>
+                    @if (User.IsInRole("admin")) {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @{ int i = 1;
+                    foreach (var student in Model) {
+                        <tr class="student-el" id="@student.StudentId">
+                            <th scope="row">@i</th>
+                            @{i++;}
+                            <td>@student.LastName @student.FirstName @student.FatherName</td>
+                            <td>@student.Group</td>
+                            @if (User.IsInRole("admin")) {
+                                <td>
+                                    <a class="student-row-edit" asp-controller="Student" asp-action="Edit" asp-route-id="@student.StudentId">
+                                        <span class="fas fa-edit" data-toggle="tooltip" title="Редактировать"></span>
+                                    </a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    }
+}

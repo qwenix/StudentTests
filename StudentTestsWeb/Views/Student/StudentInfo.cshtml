@@ -1,0 +1,132 @@
+﻿@model StudentTestsWeb.Models.Entities.Student
+@{
+    ViewData["Title"] = "Информация о студенте";
+}
+
+<h1>Информация о студенте</h1>
+<br />
+<br />
+<div>
+    <input type="number" value="@Model.StudentId" id="studentId" hidden />
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">ФИО</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@Model.LastName @Model.FirstName @Model.FatherName</b></label>
+        </div>
+    </div>
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">Группа</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@Model.Group</b></label>
+        </div>
+    </div>
+    <div class="form-group row no-margin">
+        <label class="col-sm-3 col-form-label">Почта</label>
+        <div class="col-sm-4">
+            <label class="col-form-label"><b>@Model.Mail</b></label>
+        </div>
+    </div><br />
+    @if (User.IsInRole("admin")) {
+        <div class="form-group row no-margin">
+            <a asp-action="Edit" asp-controller="Student" asp-route-id="@Model.StudentId" class="btn btn-link" id="removeStudent"><span class="fas fa-edit"></span> Редактировать учетную запись студента</a><br />
+        </div>
+        <div class="form-group row no-margin">
+            <a href="#" class="btn btn-link" data-toggle="modal" data-target="#confirmModal2" id="removeStudent"><span class="fas fa-trash"></span> Удалить учетную запись студента</a>
+        </div>
+    }
+    <br /><br />
+    @if (User.IsInRole("teacher")) {
+        <h4>Результаты ваших тестирований</h4>
+    }
+    else {
+        <h4>Результаты тестирований</h4>
+    }
+    <br />
+    @if (Model.Results.Count() == 0) {
+        if (User.IsInRole("teacher")) {
+            <span class="text-muted">Студент не проходил ваши тестирования</span>
+        }
+        else {
+            <span class="text-muted">Студент еще не проходил тестирования</span>
+        }
+    }
+    else {
+        <table class="table table-sorter">
+            <thead>
+                <tr>
+                    <th scope="col"><span>Дисциплина&emsp;</span></th>
+                    <th scope="col"><span>Тема&emsp;</span></th>
+                    <th scope="col"><span>Баллы&emsp;</span></th>
+                    <th scope="col"><span>Оценка&emsp;</span></th>
+                    @if (User.IsInRole("admin")) {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var res in Model.Results) {
+                    <tr class="res-el" id="@(res.TestId)_@res.StudentId">
+                        <td>@res.Test.Abbr</td>
+                        <td>@res.Test.Topic</td>
+                        <td>@res.Score</td>
+                        <td>@((int)(res.Score * res.Test.MaxMark / res.Test.MaxScore))</td>
+                        @if (User.IsInRole("admin")) {
+                            <th>
+                                <a class="res-row-delete" href="#" data-toggle="modal" data-target="#confirmModal">
+                                    <span class="fas fa-trash" data-toggle="tooltip" title="Удалить"></span>
+                                </a>
+                            </th>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div class="modal fade" id="confirmModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Подтверждение</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <p>Данные нельзя будет восстановить! Вы дествительно хотите выполнить удаление?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <form method="post" asp-action="DeleteResult" asp-controller="Result">
+                    <input name="studentId" id="resToDeleteSID" type="number" hidden />
+                    <input name="testId" id="resToDeleteTID" type="number" hidden />
+                    <input type="text" name="st" value="true" hidden />
+                    <button type="submit" class="btn btn-primary">Подтвердить</button>
+                </form>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->
+
+<div class="modal fade" id="confirmModal2">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Подтверждение</h4>
+                <a href="#" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </a>
+            </div>
+            <div class="modal-body">
+                <p>Данные нельзя будет восстановить! Вы дествительно хотите выполнить удаление?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <form method="post" asp-action="DeleteStudent" asp-controller="Student">
+                    <input name="id" type="number" value="@Model.StudentId" hidden />
+                    <button type="submit" class="btn btn-primary">Подтвердить</button>
+                </form>
+            </div>
+        </div> <!-- /.модальное окно-Содержание -->
+    </div> <!-- /.модальное окно-диалог -->
+</div> <!-- /.модальное окно -->
